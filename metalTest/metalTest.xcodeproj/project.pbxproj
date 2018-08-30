@@ -22,7 +22,7 @@
 		1FE3CC7B21359030009EF52A /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE3CC7A21359030009EF52A /* Metal.framework */; };
 		1FE3CC7D21359BF4009EF52A /* MIMetalRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE3CC7C21359BF4009EF52A /* MIMetalRender.swift */; };
 		1FE3CC8021359E59009EF52A /* MathUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE3CC7F21359E59009EF52A /* MathUtil.swift */; };
-		AFEF21DD21363F390000BB06 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = AFEF21DC21363F390000BB06 /* Shaders.metal */; };
+		AFEF21DD21363F390000BB06 /* model_diffuse.metal in Sources */ = {isa = PBXBuildFile; fileRef = AFEF21DC21363F390000BB06 /* model_diffuse.metal */; };
 		AFEF21E221364E750000BB06 /* spot_texture.png in Resources */ = {isa = PBXBuildFile; fileRef = AFEF21E021364E740000BB06 /* spot_texture.png */; };
 		AFEF21E321364E750000BB06 /* spot.obj in Resources */ = {isa = PBXBuildFile; fileRef = AFEF21E121364E750000BB06 /* spot.obj */; };
 		AFEF21F12136732E0000BB06 /* MBEOBJModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = AFEF21E62136732D0000BB06 /* MBEOBJModel.mm */; };
@@ -32,6 +32,8 @@
 		AFEF21FA213680B60000BB06 /* head3dStandard.obj in Resources */ = {isa = PBXBuildFile; fileRef = AFEF21F8213680B50000BB06 /* head3dStandard.obj */; };
 		AFEF21FB213680B60000BB06 /* head3d.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AFEF21F9213680B60000BB06 /* head3d.jpg */; };
 		AFEF22002137A7AC0000BB06 /* MINode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEF21FF2137A7AC0000BB06 /* MINode.swift */; };
+		AFEF22062137F80C0000BB06 /* MIObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEF22052137F80C0000BB06 /* MIObject.swift */; };
+		AFEF22082137F99F0000BB06 /* background.metal in Sources */ = {isa = PBXBuildFile; fileRef = AFEF22072137F99F0000BB06 /* background.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,7 +78,7 @@
 		1FE3CC7A21359030009EF52A /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		1FE3CC7C21359BF4009EF52A /* MIMetalRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIMetalRender.swift; sourceTree = "<group>"; };
 		1FE3CC7F21359E59009EF52A /* MathUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathUtil.swift; sourceTree = "<group>"; };
-		AFEF21DC21363F390000BB06 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		AFEF21DC21363F390000BB06 /* model_diffuse.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = model_diffuse.metal; sourceTree = "<group>"; };
 		AFEF21E021364E740000BB06 /* spot_texture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spot_texture.png; sourceTree = "<group>"; };
 		AFEF21E121364E750000BB06 /* spot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = spot.obj; sourceTree = "<group>"; };
 		AFEF21E52136732D0000BB06 /* MBEMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBEMesh.h; sourceTree = "<group>"; };
@@ -91,6 +93,8 @@
 		AFEF21F8213680B50000BB06 /* head3dStandard.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = head3dStandard.obj; sourceTree = "<group>"; };
 		AFEF21F9213680B60000BB06 /* head3d.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = head3d.jpg; sourceTree = "<group>"; };
 		AFEF21FF2137A7AC0000BB06 /* MINode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MINode.swift; sourceTree = "<group>"; };
+		AFEF22052137F80C0000BB06 /* MIObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIObject.swift; sourceTree = "<group>"; };
+		AFEF22072137F99F0000BB06 /* background.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = background.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,8 +198,8 @@
 		1FE3CC66213587D6009EF52A /* metal */ = {
 			isa = PBXGroup;
 			children = (
+				AFEF22042137F5F50000BB06 /* shaders */,
 				AFEF21FE2137A7910000BB06 /* IBase */,
-				AFEF21DC21363F390000BB06 /* Shaders.metal */,
 				1FE3CC70213589AF009EF52A /* MeshLoader.swift */,
 				1FE3CC7321358CB0009EF52A /* MIMetalView.swift */,
 				1FE3CC7C21359BF4009EF52A /* MIMetalRender.swift */,
@@ -233,8 +237,18 @@
 			isa = PBXGroup;
 			children = (
 				AFEF21FF2137A7AC0000BB06 /* MINode.swift */,
+				AFEF22052137F80C0000BB06 /* MIObject.swift */,
 			);
 			path = IBase;
+			sourceTree = "<group>";
+		};
+		AFEF22042137F5F50000BB06 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				AFEF21DC21363F390000BB06 /* model_diffuse.metal */,
+				AFEF22072137F99F0000BB06 /* background.metal */,
+			);
+			path = shaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -380,11 +394,13 @@
 				AFEF21F52136732E0000BB06 /* MBEMesh.m in Sources */,
 				AFEF22002137A7AC0000BB06 /* MINode.swift in Sources */,
 				1FE3CC3A213587B7009EF52A /* ViewController.swift in Sources */,
+				AFEF22062137F80C0000BB06 /* MIObject.swift in Sources */,
+				AFEF22082137F99F0000BB06 /* background.metal in Sources */,
 				AFEF21F42136732E0000BB06 /* MBEOBJMesh.m in Sources */,
 				AFEF21F12136732E0000BB06 /* MBEOBJModel.mm in Sources */,
 				1FE3CC7D21359BF4009EF52A /* MIMetalRender.swift in Sources */,
 				1FE3CC6F21358913009EF52A /* ObjLoaderBridge.mm in Sources */,
-				AFEF21DD21363F390000BB06 /* Shaders.metal in Sources */,
+				AFEF21DD21363F390000BB06 /* model_diffuse.metal in Sources */,
 				1FE3CC6E21358913009EF52A /* ObjTransToBinary.cpp in Sources */,
 				1FE3CC38213587B7009EF52A /* AppDelegate.swift in Sources */,
 			);

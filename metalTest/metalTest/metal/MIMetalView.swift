@@ -13,6 +13,8 @@ class MIMetalView: MTKView {
 
     var render:MIMetalRender!
     
+
+    
     override init(frame frameRect: CGRect, device: MTLDevice?) {
         super.init(frame: frameRect, device: device == nil ? MTLCreateSystemDefaultDevice() : device)
         
@@ -24,6 +26,7 @@ class MIMetalView: MTKView {
         
         let pan = UIPanGestureRecognizer.init(target: self, action: #selector(panHandle(_:)))
         self.addGestureRecognizer(pan)
+
     }
     
     required init(coder: NSCoder) {

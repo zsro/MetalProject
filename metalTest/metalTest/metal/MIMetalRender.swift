@@ -19,7 +19,7 @@ class MIVertexBuffer {
 class MIMetalRender : NSObject {
     
     var device:MTLDevice!
-    var uniformBuffer:MTLBuffer!
+    var library:MTLLibrary!
     var commandQueue:MTLCommandQueue!
     
     var renderPipelineState:MTLRenderPipelineState!
@@ -30,13 +30,14 @@ class MIMetalRender : NSObject {
     var bufferIndex:Int = 0
     
     var depthTexture:MTLTexture!
-    var bgTexture:MTLTexture!
     var diffuseTexture:MTLTexture!
     var mesh:MIMesh!
     
+    var uniformBuffer:MTLBuffer!
     var node:MINode = MINode.init()
     var meshBuffer:MIVertexBuffer!
     
+    var bgTest:MIObject?
     
     override init() {
         super.init()
@@ -50,6 +51,9 @@ class MIMetalRender : NSObject {
         createSamplerState()
         
         displaySemaphore = DispatchSemaphore(value: MBEInFlightBufferCount)
+        
+        bgTest = MIObject.init()
+        bgTest?.initialize(device: self.device, library: self.library)
     }
     
     
@@ -67,8 +71,6 @@ class MIMetalRender : NSObject {
     func setTexture(texture:UIImage) -> Void {
         let loader = MTKTextureLoader.init(device: self.device)
         do{
-            let dic = [MTKTextureLoader.Option.textureUsage:MTLTextureUsage.unknown]
-            self.bgTexture = try loader.newTexture(cgImage: #imageLiteral(resourceName: "bg").cgImage!, options: nil)
             self.diffuseTexture = try loader.newTexture(cgImage: texture.cgImage!, options: nil)
         }catch{
             print("error: metal texture load failed !!!")
@@ -76,11 +78,11 @@ class MIMetalRender : NSObject {
     }
     
     func createRenderPipelineState() -> Void {
-        let library = self.device.makeDefaultLibrary()
+        library = self.device.makeDefaultLibrary()
         let pipelineDescriptor = MTLRenderPipelineDescriptor.init()
         
-        pipelineDescriptor.vertexFunction = library?.makeFunction(name: "vertex_project")
-        pipelineDescriptor.fragmentFunction = library?.makeFunction(name: "fragment_texture")
+        pipelineDescriptor.vertexFunction = library.makeFunction(name: "vertex_project")
+        pipelineDescriptor.fragmentFunction = library.makeFunction(name: "fragment_texture")
         pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         pipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
         
@@ -118,7 +120,6 @@ class MIMetalRender : NSObject {
     
     //瞬时变量
     func currentRenderPassDescriptor(view:MTKView) -> MTLRenderPassDescriptor? {
-        
         let passDescriptor = MTLRenderPassDescriptor.init()
         
         passDescriptor.colorAttachments[0].texture = view.currentDrawable?.texture
@@ -153,6 +154,7 @@ extension MIMetalRender:MTKViewDelegate{
             let passDescriptor = self.currentRenderPassDescriptor(view: view),
             let renderPass = commandBuffer.makeRenderCommandEncoder(descriptor: passDescriptor){
             
+            bgTest?.render(commandEncoder: renderPass)
             let _ = displaySemaphore.wait(timeout: DispatchTime.distantFuture)
     
             self.updata(view)
@@ -177,7 +179,7 @@ extension MIMetalRender:MTKViewDelegate{
             
             renderPass.endEncoding()
             
-            commandBuffer.present(currentDrawable)
+            commandBuffer.present(currentDrawable, afterMinimumDuration: CFTimeInterval(1/view.preferredFramesPerSecond))
             commandBuffer.addCompletedHandler({ (commandBuffer) in
                 self.bufferIndex = (self.bufferIndex + 1) % MBEInFlightBufferCount
                 self.displaySemaphore.signal()
