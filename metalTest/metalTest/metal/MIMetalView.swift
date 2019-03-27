@@ -13,14 +13,13 @@ class MIMetalView: MTKView {
 
     var render:MIMetalRender!
     
-
     
     override init(frame frameRect: CGRect, device: MTLDevice?) {
         super.init(frame: frameRect, device: device == nil ? MTLCreateSystemDefaultDevice() : device)
-        
+        self.backgroundColor = UIColor.white
         self.preferredFramesPerSecond = 30
         self.colorPixelFormat = .bgra8Unorm
-        self.clearColor = MTLClearColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+        self.clearColor = MTLClearColor.init(red: 1, green: 1, blue: 1, alpha: 1)
         render = MIMetalRender.init()
         self.delegate = render
         

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MetalKit
 
 class MIObject: NSObject,MIMetalDelegate {
 
@@ -14,6 +15,8 @@ class MIObject: NSObject,MIMetalDelegate {
     var rps: MTLRenderPipelineState?
     var vertexBuffer: MTLBuffer!
     var uniformBuffer: MTLBuffer!
+    var diffuseTexture:MTLTexture!
+    var samplerState:MTLSamplerState!
     
     override init() {
         super.init()
@@ -22,11 +25,33 @@ class MIObject: NSObject,MIMetalDelegate {
     func initialize(device: MTLDevice, library: MTLLibrary) {
         createBuffers(device: device)
         registerShaders(device: device, library: library)
+        setTexture(device: device, texture: #imageLiteral(resourceName: "bg"))
+        createSamplerState(device:device)
+    }
+    
+    
+    func setTexture(device:MTLDevice,texture:UIImage) -> Void {
+        let loader = MTKTextureLoader.init(device: device)
+        do{
+            self.diffuseTexture = try loader.newTexture(cgImage: texture.cgImage!, options: nil)
+        }catch{
+            print("error: metal texture load failed !!!")
+        }
+    }
+    
+    func createSamplerState(device:MTLDevice) -> Void {
+        let samplerDesc = MTLSamplerDescriptor.init()
+        samplerDesc.sAddressMode = .clampToEdge
+        samplerDesc.tAddressMode = .clampToEdge
+        samplerDesc.minFilter = .nearest
+        samplerDesc.magFilter = .linear
+        samplerDesc.mipFilter = .linear
+        self.samplerState = device.makeSamplerState(descriptor: samplerDesc)
     }
     
     struct Vertex {
-        var position: vector_float4
-        var color: vector_float4
+        var position: simd_float4
+        var color: simd_float4
     }
     
     struct Matrix {
@@ -42,10 +67,10 @@ class MIObject: NSObject,MIMetalDelegate {
     }
     
     func createBuffers(device:MTLDevice) {
-        let vertex_data = [Vertex(position: [-1.0, -1.0, 0.0, 1.0], color: [1, 0, 0, 1]),
-                           Vertex(position: [ 1.0, -1.0, 0.0, 1.0], color: [0, 1, 0, 1]),
+        let vertex_data = [Vertex(position: [-1.0, -1.0, 0.0, 1.0], color: [0, 1, 0, 1]),
+                           Vertex(position: [ 1.0, -1.0, 0.0, 1.0], color: [1, 1, 0, 1]),
                            Vertex(position: [-1.0,  1.0, 0.0, 1.0], color: [0, 0, 1, 1]),
-                           Vertex(position: [ 1.0,  1.0, 0.0, 1.0], color: [0, 0, 0, 1])
+                           Vertex(position: [ 1.0,  1.0, 0.0, 1.0], color: [1, 0, 0, 1])
         ]
         vertexBuffer = device.makeBuffer(bytes: vertex_data, length: MemoryLayout<Vertex>.size * 4, options:[])
         uniformBuffer = device.makeBuffer(length: MemoryLayout<Float>.size * 16, options: [])
@@ -76,6 +101,8 @@ class MIObject: NSObject,MIMetalDelegate {
         commandEncoder.setRenderPipelineState(rps!)
         commandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         commandEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
+        commandEncoder.setFragmentTexture(diffuseTexture, index: 0)
+        commandEncoder.setFragmentSamplerState(samplerState, index: 0)
         commandEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4, instanceCount: 1)
     }
     

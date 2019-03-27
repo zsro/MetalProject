@@ -107,8 +107,7 @@ class MIMetalRender : NSObject {
     }
     
     func makeDepthTexture(view:MTKView) -> Void {
-        
-        let drawableSize = view.drawableSize;
+        let drawableSize = view.drawableSize
         
         let desc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .depth32Float,
                                                             width: Int(drawableSize.width),
@@ -134,8 +133,6 @@ class MIMetalRender : NSObject {
         
         return passDescriptor
     }
-
-    
 }
 
 extension MIMetalRender:MTKViewDelegate{
@@ -154,9 +151,9 @@ extension MIMetalRender:MTKViewDelegate{
             let passDescriptor = self.currentRenderPassDescriptor(view: view),
             let renderPass = commandBuffer.makeRenderCommandEncoder(descriptor: passDescriptor){
             
-            bgTest?.render(commandEncoder: renderPass)
+            
             let _ = displaySemaphore.wait(timeout: DispatchTime.distantFuture)
-    
+            bgTest?.render(commandEncoder: renderPass)
             self.updata(view)
             
             renderPass.setRenderPipelineState(self.renderPipelineState)
@@ -197,13 +194,13 @@ extension MIMetalRender:MTKViewDelegate{
         let scale = matrix_float4x4_uniform_scale(scale: node.scale)
         let modelMatrix = matrix_multiply(matrix_multiply(xRot, yRot), scale)
         
-        let cameraTranslation:simd_float3 = [0,0,-250]
+        let cameraTranslation:simd_float3 = [0,0,-400]
         let viewMatrix:matrix_float4x4 = matrix_float4x4_translation(t: cameraTranslation)
         
         let drawabelSize = view.drawableSize
         
         let aspect:Float = Float(drawabelSize.width / drawabelSize.height)
-        let fov:Float = (2.0 * Float.pi) / 5.0
+        let fov:Float = (2.0 * Float.pi) / 6.0
         let near:Float = 0.1
         let far:Float = 1000
         let projectionMatrix:matrix_float4x4 = matrix_float4x4_perspective(aspect, fov, near, far)
