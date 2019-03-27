@@ -29,3 +29,39 @@ struct BoundingSphere {
         return float4(ray.origin + ray.direction * t0, 1)
     }
 }
+
+func IntersectTriangle(orig: float3, dir: float3, v0: float3, v1: float3, v2: float3) -> Bool{
+    
+    let E1 = v1 - v0
+    let E2 = v2 - v0
+    let p = cross(dir, E2)
+    
+    var det = dot(E1, p)
+    
+    var t: float3
+    if det > 0{
+        t = orig - v0
+    }else{
+        t = v0 - orig
+        det = -det
+    }
+    
+    if det < 0.0001{
+        return false
+    }
+    
+    let u = dot(t, p)
+    if u < 0.0 || u > det{
+        return false
+    }
+    
+    let Q = cross(t, E1)
+    
+    let v = dot(dir, Q)
+    
+    if v < 0.0 || u + v > det{
+        return false
+    }
+
+    return true
+}
