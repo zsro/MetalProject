@@ -62,11 +62,9 @@ class ViewController: NSUIViewController, MTKViewDelegate {
         
         let kVelocityScale:Float = 0.0002
         rotate.x += kVelocityScale * Float(-velocity.x)
-        rotate.x = rotate.x < Float.pi/2 ? rotate.x : Float.pi/2
-        rotate.x = rotate.x > -Float.pi/2 ? rotate.x : -Float.pi/2
+        rotate.x = max(min(rotate.x, Float.pi/2), -Float.pi/2)
         rotate.y += kVelocityScale * Float(-velocity.y)
-        rotate.y = rotate.y < Float.pi/2 ? rotate.y : Float.pi/2
-        rotate.y = rotate.y > -Float.pi/2 ? rotate.y : -Float.pi/2
+        rotate.y = max(min(rotate.y, Float.pi/2), -Float.pi/2)
         scene.avatarNode.transform = matrix_float4x4_rotation_Y(angle: rotate.x) * matrix_float4x4_rotation_X(angle: rotate.y)
     }
     
