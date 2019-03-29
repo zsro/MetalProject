@@ -65,3 +65,15 @@ func IntersectTriangle(orig: float3, dir: float3, v0: float3, v1: float3, v2: fl
 
     return true
 }
+
+
+func test() -> Void {
+    
+    // v0 v1 v2
+    // avatar.transform * float3(translateBy: v)
+    // ==== tri transform
+    // tri transfrom * ray === localRay
+    // into IntersectTriangle()
+    
+    
+}

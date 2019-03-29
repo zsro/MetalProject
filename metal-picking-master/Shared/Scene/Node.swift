@@ -21,6 +21,29 @@ class Node: Equatable, CustomDebugStringConvertible {
     
     var material = Material()
     
+    private var _rotate: float3 = float3()
+    private var _position: float3 = float3()
+    
+    var rotate: float3{
+        get{
+            return _rotate
+        }
+        set{
+            _rotate = newValue
+            transform = matrix_float4x4_rotation_Y(angle: _rotate.x) * matrix_float4x4_rotation_X(angle: _rotate.y) * float4x4.init(translationBy: _position)
+        }
+    }
+    
+    var position: float3{
+        get{
+            return _position
+        }
+        set{
+            _position = newValue
+            transform = matrix_float4x4_rotation_Y(angle: _rotate.x) * matrix_float4x4_rotation_X(angle: _rotate.y) * float4x4.init(translationBy: _position)
+        }
+    }
+    
     var transform: float4x4 = matrix_identity_float4x4
     
     var worldTransform: float4x4 {

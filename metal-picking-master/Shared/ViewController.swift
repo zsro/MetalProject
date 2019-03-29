@@ -39,6 +39,7 @@ class ViewController: NSUIViewController, MTKViewDelegate {
         
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(tapGesture(sender:)))
         let pan = UIPanGestureRecognizer.init(target: self, action: #selector(panGesture(sender:)))
+        
         mtkView.addGestureRecognizer(tap)
         mtkView.addGestureRecognizer(pan)
         
@@ -58,14 +59,24 @@ class ViewController: NSUIViewController, MTKViewDelegate {
     
     var rotate: float3 = float3()
     @objc func panGesture(sender: UIPanGestureRecognizer){
-        let velocity = sender.velocity(in: mtkView)
-        
+         let velocity = sender.velocity(in: mtkView)
+         let avatar = scene.avatarNode
         let kVelocityScale:Float = 0.0002
+        
+        //双指平移
+        if sender.numberOfTouches == 2{
+            avatar.position += float3.init(Float(velocity.x)*kVelocityScale, Float(-velocity.y)*kVelocityScale, 0)
+            return
+        }
+        
+        //单指旋转
+     
+        var rotate = avatar.rotate
         rotate.x += kVelocityScale * Float(-velocity.x)
         rotate.x = max(min(rotate.x, Float.pi/2), -Float.pi/2)
         rotate.y += kVelocityScale * Float(-velocity.y)
         rotate.y = max(min(rotate.y, Float.pi/2), -Float.pi/2)
-        scene.avatarNode.transform = matrix_float4x4_rotation_Y(angle: rotate.x) * matrix_float4x4_rotation_X(angle: rotate.y)
+        avatar.rotate = rotate
     }
     
     lazy var vertexDescriptor: MDLVertexDescriptor = {
